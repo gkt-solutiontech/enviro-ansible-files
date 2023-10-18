@@ -41,7 +41,18 @@
         path: /var/run/docker.sock
         owner: ubuntu
         group: ubuntu
+    # To monitor containers
+    - name: check if daemon.json file exist
+      stat:
+        path: /etc/docker/daemon.json
+      register: docker_stat
 
+    - name: copy daemon file if not present
+      copy:
+        src: daemon.json
+        dest: /etc/docker/daemon.json
+      when: not docker_stat.stat.exists
+      notify: Restart docker
 
     - name: start docker service
       service:
