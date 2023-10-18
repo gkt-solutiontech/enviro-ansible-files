@@ -13,7 +13,7 @@
 
     - name: Copy a custom config file to the server's document root
       copy:
-        src: /home/ubuntu/ansible-files/nginx_chatapp.conf  
+        src: /home/ubuntu/enviro-ansible-files/nginx_chatapp.conf  
         dest: "{{ document_root_custom }}"
         mode: preserve
 
@@ -28,7 +28,7 @@
 
     - name: Copy a default config file to the server's document root
       copy:
-        src: /home/ubuntu/ansible-files/nginx.conf  
+        src: /home/ubuntu/enviro-ansible-files/nginx.conf  
         dest: "{{ document_root_default }}"
         mode: preserve
     
