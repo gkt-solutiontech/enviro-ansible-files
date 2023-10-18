@@ -1,0 +1,9 @@
+---
+- hosts: nginx
+  become: true
+  tasks:
+
+    - name: Restart nginx
+      service:
+        name: nginx
+        state: restarted
