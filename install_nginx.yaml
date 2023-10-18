@@ -1,0 +1,46 @@
+---
+- hosts: nginx
+  become: true
+  vars:
+    document_root_custom: /etc/nginx/conf.d
+    document_root_default: /etc/nginx
+  tasks:
+    - name: install nginx
+      apt:
+        name: nginx
+        state: latest
+        update_cache: yes
+
+    - name: Copy a custom config file to the server's document root
+      copy:
+        src: /home/ubuntu/ansible-files/nginx_chatapp.conf  
+        dest: "{{ document_root_custom }}"
+        mode: preserve
+
+    - name: Check if nginx.conf file exist
+      stat: 
+        path: /etc/nginx/nginx.conf
+      register: nginx_stat
+
+    - name: Backup nginx conf file if present
+      command: mv /etc/nginx/nginx.conf /etc/nginx/nginx.conf_backup
+      when: nginx_stat.stat.exists
+
+    - name: Copy a default config file to the server's document root
+      copy:
+        src: /home/ubuntu/ansible-files/nginx.conf  
+        dest: "{{ document_root_default }}"
+        mode: preserve
+    
+    - name: start nginx
+      service:
+          name: nginx
+          state: started
+          enabled: yes
+  handlers:
+    - name: Restart Nginx
+      service:
+        name: nginx
+        state: restarted
+
+
